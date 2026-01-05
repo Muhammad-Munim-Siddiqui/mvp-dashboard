@@ -1,12 +1,17 @@
+import { useState } from "react";
 import { Trophy, Users, TrendingUp, Target } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LeaderboardTable from "@/components/LeaderboardTable";
 import playersData from "@/data/players.json";
 
 const Index = () => {
-  const sortedPlayers = [...playersData].sort((a, b) => b.overallScore - a.overallScore);
+  const [rankingType, setRankingType] = useState("singles");
+
+  const getPlayerScore = (player) => player[rankingType].overallScore;
+  const sortedPlayers = [...playersData].sort((a, b) => getPlayerScore(b) - getPlayerScore(a));
   const topPlayer = sortedPlayers[0];
-  const totalMatches = playersData.reduce((acc, player) => acc + player.matchesPlayed, 0);
-  const averageScore = Math.round(playersData.reduce((acc, player) => acc + player.overallScore, 0) / playersData.length);
+  const totalMatches = playersData.reduce((acc, player) => acc + player[rankingType].matchesPlayed, 0);
+  const averageScore = Math.round(playersData.reduce((acc, player) => acc + getPlayerScore(player), 0) / playersData.length);
 
   return (
     <div className="min-h-screen bg-background">
@@ -50,15 +55,24 @@ const Index = () => {
 
       {/* Leaderboard Section */}
       <section className="container mx-auto px-4 py-10 md:py-14">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
           <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground uppercase">
             Rankings
           </h2>
-          <span className="text-sm text-muted-foreground">
-            {playersData.length} players
-          </span>
+          
+          <Tabs value={rankingType} onValueChange={setRankingType} className="w-full sm:w-auto">
+            <TabsList className="grid w-full sm:w-auto grid-cols-2">
+              <TabsTrigger value="singles" className="font-display uppercase text-sm">
+                Singles
+              </TabsTrigger>
+              <TabsTrigger value="doubles" className="font-display uppercase text-sm">
+                Doubles
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
-        <LeaderboardTable players={playersData} />
+        
+        <LeaderboardTable players={playersData} rankingType={rankingType} />
       </section>
     </div>
   );

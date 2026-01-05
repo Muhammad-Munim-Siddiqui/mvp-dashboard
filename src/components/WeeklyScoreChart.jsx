@@ -1,6 +1,6 @@
 import ScoreBar from "./ScoreBar";
 
-const WeeklyScoreChart = ({ scores, playerName }) => {
+const WeeklyScoreChart = ({ scores, playerName, rankingType = "singles" }) => {
   const weekLabels = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6", "Week 7"];
   const maxScore = Math.max(...scores);
   const minScore = Math.min(...scores);
@@ -10,7 +10,7 @@ const WeeklyScoreChart = ({ scores, playerName }) => {
     <div className="bg-card rounded-xl p-6 shadow-card border border-border/50">
       {playerName && (
         <h3 className="font-display text-lg font-semibold text-foreground mb-4">
-          Weekly Performance
+          Weekly Performance <span className="text-muted-foreground capitalize">({rankingType})</span>
         </h3>
       )}
 

@@ -2,9 +2,10 @@ import { Link } from "react-router-dom";
 import { User, TrendingUp, Target } from "lucide-react";
 import ScoreBar from "./ScoreBar";
 
-const PlayerCard = ({ player, rank }) => {
-  const latestScore = player.weeklyScores[player.weeklyScores.length - 1];
-  const previousScore = player.weeklyScores[player.weeklyScores.length - 2];
+const PlayerCard = ({ player, rank, rankingType = "singles" }) => {
+  const playerData = player[rankingType];
+  const latestScore = playerData.weeklyScores[playerData.weeklyScores.length - 1];
+  const previousScore = playerData.weeklyScores[playerData.weeklyScores.length - 2];
   const trend = latestScore - previousScore;
 
   const getRankBadge = (rank) => {
@@ -16,7 +17,7 @@ const PlayerCard = ({ player, rank }) => {
 
   return (
     <Link
-      to={`/profile/${player.id}`}
+      to={`/profile/${player.id}?type=${rankingType}`}
       className="block group"
     >
       <div className="bg-card rounded-xl p-5 shadow-card hover:shadow-elevated transition-all duration-300 border border-border/50 hover:border-accent/30 animate-fade-in">
@@ -36,7 +37,7 @@ const PlayerCard = ({ player, rank }) => {
             <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Target className="w-3.5 h-3.5" />
-                {player.matchesPlayed} matches
+                {playerData.matchesPlayed} matches
               </span>
               <span className={`flex items-center gap-1 ${trend >= 0 ? "text-accent" : "text-destructive"}`}>
                 <TrendingUp className={`w-3.5 h-3.5 ${trend < 0 ? "rotate-180" : ""}`} />
@@ -47,16 +48,16 @@ const PlayerCard = ({ player, rank }) => {
 
           <div className="text-right">
             <div className="font-display text-2xl font-bold text-primary">
-              {player.overallScore}
+              {playerData.overallScore}
             </div>
-            <div className="text-xs text-muted-foreground uppercase tracking-wide">
-              Overall
+            <div className="text-xs text-muted-foreground uppercase tracking-wide capitalize">
+              {rankingType}
             </div>
           </div>
         </div>
 
         <div className="mt-4">
-          <ScoreBar score={player.overallScore} showLabel={false} />
+          <ScoreBar score={playerData.overallScore} showLabel={false} />
         </div>
       </div>
     </Link>
