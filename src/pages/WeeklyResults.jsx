@@ -1,15 +1,22 @@
+import { useState } from "react";
 import { Calendar, TrendingUp, TrendingDown, Award } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import playersData from "@/data/players.json";
 
 const WeeklyResults = () => {
+  const [rankingType, setRankingType] = useState("singles");
+
   // Get latest week scores (last element in weeklyScores array)
-  const weeklyData = playersData.map(player => ({
-    ...player,
-    latestScore: player.weeklyScores[player.weeklyScores.length - 1],
-    previousScore: player.weeklyScores[player.weeklyScores.length - 2],
-    trend: player.weeklyScores[player.weeklyScores.length - 1] - player.weeklyScores[player.weeklyScores.length - 2]
-  })).sort((a, b) => b.latestScore - a.latestScore);
+  const weeklyData = playersData.map(player => {
+    const playerData = player[rankingType];
+    return {
+      ...player,
+      latestScore: playerData.weeklyScores[playerData.weeklyScores.length - 1],
+      previousScore: playerData.weeklyScores[playerData.weeklyScores.length - 2],
+      trend: playerData.weeklyScores[playerData.weeklyScores.length - 1] - playerData.weeklyScores[playerData.weeklyScores.length - 2]
+    };
+  }).sort((a, b) => b.latestScore - a.latestScore);
 
   const topPerformer = weeklyData[0];
   const biggestGainer = [...weeklyData].sort((a, b) => b.trend - a.trend)[0];
@@ -36,6 +43,20 @@ const WeeklyResults = () => {
       </section>
 
       <div className="container mx-auto px-4 py-10">
+        {/* Ranking Type Tabs */}
+        <div className="flex justify-center mb-8">
+          <Tabs value={rankingType} onValueChange={setRankingType}>
+            <TabsList className="grid w-64 grid-cols-2">
+              <TabsTrigger value="singles" className="font-display uppercase text-sm">
+                Singles
+              </TabsTrigger>
+              <TabsTrigger value="doubles" className="font-display uppercase text-sm">
+                Doubles
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+
         {/* Highlights */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           <div className="bg-card rounded-xl p-6 shadow-card border border-border/50 animate-slide-up" style={{ animationDelay: "100ms" }}>
@@ -45,7 +66,7 @@ const WeeklyResults = () => {
               </div>
               <span className="text-sm text-muted-foreground uppercase tracking-wide">Top Performer</span>
             </div>
-            <Link to={`/profile/${topPerformer.id}`} className="block hover:text-accent transition-colors">
+            <Link to={`/profile/${topPerformer.id}?type=${rankingType}`} className="block hover:text-accent transition-colors">
               <h3 className="font-display text-xl font-bold text-foreground">{topPerformer.name}</h3>
             </Link>
             <div className="flex items-baseline gap-2 mt-2">
@@ -61,7 +82,7 @@ const WeeklyResults = () => {
               </div>
               <span className="text-sm text-muted-foreground uppercase tracking-wide">Biggest Gain</span>
             </div>
-            <Link to={`/profile/${biggestGainer.id}`} className="block hover:text-accent transition-colors">
+            <Link to={`/profile/${biggestGainer.id}?type=${rankingType}`} className="block hover:text-accent transition-colors">
               <h3 className="font-display text-xl font-bold text-foreground">{biggestGainer.name}</h3>
             </Link>
             <div className="flex items-baseline gap-2 mt-2">
@@ -87,14 +108,14 @@ const WeeklyResults = () => {
 
         {/* Weekly Breakdown */}
         <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground uppercase mb-6">
-          All Results
+          All Results <span className="text-muted-foreground capitalize">({rankingType})</span>
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {weeklyData.map((player, index) => (
             <Link
               key={player.id}
-              to={`/profile/${player.id}`}
+              to={`/profile/${player.id}?type=${rankingType}`}
               className="bg-card rounded-xl p-5 shadow-card border border-border/50 hover:border-accent/30 hover:shadow-elevated transition-all duration-300 animate-fade-in group"
               style={{ animationDelay: `${index * 50}ms` }}
             >

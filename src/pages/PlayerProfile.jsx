@@ -1,10 +1,16 @@
-import { useParams, Link } from "react-router-dom";
+import { useState } from "react";
+import { useParams, useSearchParams, Link } from "react-router-dom";
 import { ArrowLeft, User, Trophy, Target, TrendingUp, Calendar } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import WeeklyScoreChart from "@/components/WeeklyScoreChart";
 import playersData from "@/data/players.json";
 
 const PlayerProfile = () => {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const initialType = searchParams.get("type") || "singles";
+  const [rankingType, setRankingType] = useState(initialType);
+  
   const player = playersData.find(p => p.id === Number(id));
 
   if (!player) {
@@ -20,10 +26,11 @@ const PlayerProfile = () => {
     );
   }
 
-  const sortedPlayers = [...playersData].sort((a, b) => b.overallScore - a.overallScore);
+  const playerData = player[rankingType];
+  const sortedPlayers = [...playersData].sort((a, b) => b[rankingType].overallScore - a[rankingType].overallScore);
   const rank = sortedPlayers.findIndex(p => p.id === player.id) + 1;
-  const latestScore = player.weeklyScores[player.weeklyScores.length - 1];
-  const bestScore = Math.max(...player.weeklyScores);
+  const latestScore = playerData.weeklyScores[playerData.weeklyScores.length - 1];
+  const bestScore = Math.max(...playerData.weeklyScores);
 
   return (
     <div className="min-h-screen bg-background">
@@ -48,6 +55,9 @@ const PlayerProfile = () => {
                 <span className="px-3 py-1 bg-accent text-accent-foreground text-sm font-bold rounded-full">
                   #{rank}
                 </span>
+                <span className="px-3 py-1 bg-primary-foreground/20 text-primary-foreground text-sm font-medium rounded-full capitalize">
+                  {rankingType}
+                </span>
               </div>
               <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground uppercase tracking-tight">
                 {player.name}
@@ -59,10 +69,10 @@ const PlayerProfile = () => {
 
             <div className="bg-primary-foreground/10 backdrop-blur-sm rounded-xl p-6 text-center">
               <div className="font-display text-4xl md:text-5xl font-bold text-primary-foreground">
-                {player.overallScore}
+                {playerData.overallScore}
               </div>
               <div className="text-xs text-primary-foreground/70 uppercase tracking-widest mt-1">
-                Overall Score
+                {rankingType} Score
               </div>
             </div>
           </div>
@@ -70,6 +80,20 @@ const PlayerProfile = () => {
       </section>
 
       <div className="container mx-auto px-4 py-10">
+        {/* Ranking Type Tabs */}
+        <div className="flex justify-center mb-8">
+          <Tabs value={rankingType} onValueChange={setRankingType}>
+            <TabsList className="grid w-64 grid-cols-2">
+              <TabsTrigger value="singles" className="font-display uppercase text-sm">
+                Singles
+              </TabsTrigger>
+              <TabsTrigger value="doubles" className="font-display uppercase text-sm">
+                Doubles
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           <div className="bg-card rounded-xl p-5 shadow-card border border-border/50 animate-slide-up" style={{ animationDelay: "100ms" }}>
@@ -86,7 +110,7 @@ const PlayerProfile = () => {
               <Target className="w-5 h-5 text-accent" />
               <span className="text-sm text-muted-foreground">Matches</span>
             </div>
-            <div className="font-display text-3xl font-bold text-foreground">{player.matchesPlayed}</div>
+            <div className="font-display text-3xl font-bold text-foreground">{playerData.matchesPlayed}</div>
             <div className="text-xs text-muted-foreground">total played</div>
           </div>
 
@@ -111,7 +135,7 @@ const PlayerProfile = () => {
 
         {/* Weekly Performance Chart */}
         <div className="animate-slide-up" style={{ animationDelay: "500ms" }}>
-          <WeeklyScoreChart scores={player.weeklyScores} playerName={player.name} />
+          <WeeklyScoreChart scores={playerData.weeklyScores} playerName={player.name} rankingType={rankingType} />
         </div>
 
         {/* Player Bio Card */}

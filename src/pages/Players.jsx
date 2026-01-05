@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { Users } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PlayerCard from "@/components/PlayerCard";
 import playersData from "@/data/players.json";
 
 const Players = () => {
-  const sortedPlayers = [...playersData].sort((a, b) => b.overallScore - a.overallScore);
+  const [rankingType, setRankingType] = useState("singles");
+  
+  const sortedPlayers = [...playersData].sort((a, b) => b[rankingType].overallScore - a[rankingType].overallScore);
 
   return (
     <div className="min-h-screen bg-background">
@@ -26,19 +30,27 @@ const Players = () => {
       </section>
 
       <div className="container mx-auto px-4 py-10">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
           <h2 className="font-display text-2xl font-bold text-foreground uppercase">
             All Players
           </h2>
-          <span className="text-sm text-muted-foreground">
-            Sorted by overall score
-          </span>
+          
+          <Tabs value={rankingType} onValueChange={setRankingType} className="w-full sm:w-auto">
+            <TabsList className="grid w-full sm:w-auto grid-cols-2">
+              <TabsTrigger value="singles" className="font-display uppercase text-sm">
+                Singles
+              </TabsTrigger>
+              <TabsTrigger value="doubles" className="font-display uppercase text-sm">
+                Doubles
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {sortedPlayers.map((player, index) => (
             <div key={player.id} style={{ animationDelay: `${index * 50}ms` }}>
-              <PlayerCard player={player} rank={index + 1} />
+              <PlayerCard player={player} rank={index + 1} rankingType={rankingType} />
             </div>
           ))}
         </div>

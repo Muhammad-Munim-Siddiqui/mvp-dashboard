@@ -2,81 +2,151 @@
   {
     "id": 1,
     "name": "Marcus Williams",
-    "overallScore": 94,
-    "weeklyScores": [92, 95, 91, 96, 94, 93, 97],
-    "matchesPlayed": 47,
+    "singles": {
+      "overallScore": 94,
+      "weeklyScores": [92, 95, 91, 96, 94, 93, 97],
+      "matchesPlayed": 47
+    },
+    "doubles": {
+      "overallScore": 91,
+      "weeklyScores": [89, 90, 92, 91, 93, 90, 94],
+      "matchesPlayed": 32
+    },
     "bio": "Team captain and natural leader. Marcus brings intensity and precision to every training session, consistently pushing teammates to perform at their best."
   },
   {
     "id": 2,
     "name": "Elena Rodriguez",
-    "overallScore": 91,
-    "weeklyScores": [88, 90, 92, 93, 91, 89, 94],
-    "matchesPlayed": 42,
+    "singles": {
+      "overallScore": 91,
+      "weeklyScores": [88, 90, 92, 93, 91, 89, 94],
+      "matchesPlayed": 42
+    },
+    "doubles": {
+      "overallScore": 95,
+      "weeklyScores": [93, 94, 96, 95, 97, 94, 96],
+      "matchesPlayed": 38
+    },
     "bio": "Known for her explosive speed and tactical awareness. Elena has been the academy's most improved player over the past season."
   },
   {
     "id": 3,
     "name": "James Chen",
-    "overallScore": 89,
-    "weeklyScores": [85, 87, 90, 88, 91, 92, 90],
-    "matchesPlayed": 38,
+    "singles": {
+      "overallScore": 89,
+      "weeklyScores": [85, 87, 90, 88, 91, 92, 90],
+      "matchesPlayed": 38
+    },
+    "doubles": {
+      "overallScore": 88,
+      "weeklyScores": [86, 87, 89, 88, 90, 89, 87],
+      "matchesPlayed": 28
+    },
     "bio": "A technical specialist with exceptional ball control. James excels in high-pressure situations and clutch performances."
   },
   {
     "id": 4,
     "name": "Sarah Thompson",
-    "overallScore": 87,
-    "weeklyScores": [84, 86, 88, 87, 89, 90, 85],
-    "matchesPlayed": 35,
+    "singles": {
+      "overallScore": 87,
+      "weeklyScores": [84, 86, 88, 87, 89, 90, 85],
+      "matchesPlayed": 35
+    },
+    "doubles": {
+      "overallScore": 92,
+      "weeklyScores": [90, 91, 93, 92, 94, 91, 93],
+      "matchesPlayed": 40
+    },
     "bio": "Defensive powerhouse with outstanding reading of the game. Sarah's consistency makes her a cornerstone of any lineup."
   },
   {
     "id": 5,
     "name": "David Kim",
-    "overallScore": 85,
-    "weeklyScores": [82, 84, 86, 85, 87, 88, 83],
-    "matchesPlayed": 33,
+    "singles": {
+      "overallScore": 85,
+      "weeklyScores": [82, 84, 86, 85, 87, 88, 83],
+      "matchesPlayed": 33
+    },
+    "doubles": {
+      "overallScore": 86,
+      "weeklyScores": [84, 85, 87, 86, 88, 87, 85],
+      "matchesPlayed": 30
+    },
     "bio": "Versatile midfielder with a powerful shot. David's work rate and stamina are unmatched in the academy."
   },
   {
     "id": 6,
     "name": "Olivia Martinez",
-    "overallScore": 83,
-    "weeklyScores": [80, 82, 84, 83, 85, 81, 86],
-    "matchesPlayed": 31,
+    "singles": {
+      "overallScore": 83,
+      "weeklyScores": [80, 82, 84, 83, 85, 81, 86],
+      "matchesPlayed": 31
+    },
+    "doubles": {
+      "overallScore": 89,
+      "weeklyScores": [87, 88, 90, 89, 91, 88, 90],
+      "matchesPlayed": 35
+    },
     "bio": "Creative playmaker with excellent vision. Olivia's passing accuracy and assist record speak for themselves."
   },
   {
     "id": 7,
     "name": "Ryan O'Connor",
-    "overallScore": 81,
-    "weeklyScores": [78, 80, 82, 81, 83, 84, 79],
-    "matchesPlayed": 28,
+    "singles": {
+      "overallScore": 81,
+      "weeklyScores": [78, 80, 82, 81, 83, 84, 79],
+      "matchesPlayed": 28
+    },
+    "doubles": {
+      "overallScore": 84,
+      "weeklyScores": [82, 83, 85, 84, 86, 85, 83],
+      "matchesPlayed": 26
+    },
     "bio": "Physical presence with aerial dominance. Ryan is the go-to player for set pieces and defensive headers."
   },
   {
     "id": 8,
     "name": "Aisha Patel",
-    "overallScore": 79,
-    "weeklyScores": [76, 78, 80, 79, 81, 77, 82],
-    "matchesPlayed": 25,
+    "singles": {
+      "overallScore": 79,
+      "weeklyScores": [76, 78, 80, 79, 81, 77, 82],
+      "matchesPlayed": 25
+    },
+    "doubles": {
+      "overallScore": 82,
+      "weeklyScores": [80, 81, 83, 82, 84, 81, 83],
+      "matchesPlayed": 24
+    },
     "bio": "Lightning-fast winger with exceptional dribbling skills. Aisha creates chances out of nothing with her pace."
   },
   {
     "id": 9,
     "name": "Lucas Anderson",
-    "overallScore": 77,
-    "weeklyScores": [74, 76, 78, 77, 79, 80, 75],
-    "matchesPlayed": 22,
+    "singles": {
+      "overallScore": 77,
+      "weeklyScores": [74, 76, 78, 77, 79, 80, 75],
+      "matchesPlayed": 22
+    },
+    "doubles": {
+      "overallScore": 80,
+      "weeklyScores": [78, 79, 81, 80, 82, 81, 79],
+      "matchesPlayed": 20
+    },
     "bio": "Young prospect showing tremendous potential. Lucas's technical development has impressed the coaching staff."
   },
   {
     "id": 10,
     "name": "Emma Wilson",
-    "overallScore": 75,
-    "weeklyScores": [72, 74, 76, 75, 77, 73, 78],
-    "matchesPlayed": 20,
+    "singles": {
+      "overallScore": 75,
+      "weeklyScores": [72, 74, 76, 75, 77, 73, 78],
+      "matchesPlayed": 20
+    },
+    "doubles": {
+      "overallScore": 78,
+      "weeklyScores": [76, 77, 79, 78, 80, 77, 79],
+      "matchesPlayed": 18
+    },
     "bio": "Goalkeeper with lightning reflexes. Emma's shot-stopping ability has saved numerous games for the academy."
   }
 ]

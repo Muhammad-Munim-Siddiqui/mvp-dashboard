@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { ChevronRight, TrendingUp, TrendingDown, Minus } from "lucide-react";
 
-const LeaderboardTable = ({ players }) => {
-  const sortedPlayers = [...players].sort((a, b) => b.overallScore - a.overallScore);
+const LeaderboardTable = ({ players, rankingType = "singles" }) => {
+  const getPlayerData = (player) => player[rankingType];
+  const sortedPlayers = [...players].sort((a, b) => getPlayerData(b).overallScore - getPlayerData(a).overallScore);
 
   const getRankStyle = (rank) => {
     if (rank === 1) return "bg-amber-400 text-amber-900 font-bold";
@@ -34,7 +35,8 @@ const LeaderboardTable = ({ players }) => {
           <tbody>
             {sortedPlayers.map((player, index) => {
               const rank = index + 1;
-              const trend = getTrend(player.weeklyScores);
+              const playerData = getPlayerData(player);
+              const trend = getTrend(playerData.weeklyScores);
 
               return (
                 <tr
@@ -48,14 +50,14 @@ const LeaderboardTable = ({ players }) => {
                   </td>
                   <td className="px-4 py-4">
                     <Link 
-                      to={`/profile/${player.id}`}
+                      to={`/profile/${player.id}?type=${rankingType}`}
                       className="font-semibold text-foreground hover:text-accent transition-colors"
                     >
                       {player.name}
                     </Link>
                   </td>
                   <td className="px-4 py-4 text-center text-muted-foreground hidden sm:table-cell">
-                    {player.matchesPlayed}
+                    {playerData.matchesPlayed}
                   </td>
                   <td className="px-4 py-4 text-center hidden md:table-cell">
                     <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
@@ -71,12 +73,12 @@ const LeaderboardTable = ({ players }) => {
                   </td>
                   <td className="px-4 py-4 text-center">
                     <span className="font-display text-xl font-bold text-primary">
-                      {player.overallScore}
+                      {playerData.overallScore}
                     </span>
                   </td>
                   <td className="px-4 py-4 text-right">
                     <Link
-                      to={`/profile/${player.id}`}
+                      to={`/profile/${player.id}?type=${rankingType}`}
                       className="inline-flex items-center gap-1 text-muted-foreground hover:text-accent transition-colors"
                     >
                       <span className="hidden sm:inline text-sm">View</span>
