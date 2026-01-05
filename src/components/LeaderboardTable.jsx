@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { ChevronRight, TrendingUp, TrendingDown, Minus } from "lucide-react";
-import { getPlayerData, sortPlayersByRanking } from "@/lib/rankings";
 
 const LeaderboardTable = ({ players, rankingType = "singles" }) => {
-  const sortedPlayers = sortPlayersByRanking(players, rankingType);
+  const getPlayerData = (player) => player[rankingType];
+  const sortedPlayers = [...players].sort((a, b) => getPlayerData(b).overallScore - getPlayerData(a).overallScore);
 
   const getRankStyle = (rank) => {
     if (rank === 1) return "bg-amber-400 text-amber-900 font-bold";
@@ -35,7 +35,7 @@ const LeaderboardTable = ({ players, rankingType = "singles" }) => {
           <tbody>
             {sortedPlayers.map((player, index) => {
               const rank = index + 1;
-              const playerData = getPlayerData(player, rankingType);
+              const playerData = getPlayerData(player);
               const trend = getTrend(playerData.weeklyScores);
 
               return (

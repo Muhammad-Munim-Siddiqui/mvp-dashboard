@@ -4,7 +4,6 @@ import { ArrowLeft, User, Trophy, Target, TrendingUp, Calendar } from "lucide-re
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import WeeklyScoreChart from "@/components/WeeklyScoreChart";
 import playersData from "@/data/players.json";
-import { getPlayerData, sortPlayersByRanking } from "@/lib/rankings";
 
 const PlayerProfile = () => {
   const { id } = useParams();
@@ -27,8 +26,8 @@ const PlayerProfile = () => {
     );
   }
 
-  const playerData = getPlayerData(player, rankingType);
-  const sortedPlayers = sortPlayersByRanking(playersData, rankingType);
+  const playerData = player[rankingType];
+  const sortedPlayers = [...playersData].sort((a, b) => b[rankingType].overallScore - a[rankingType].overallScore);
   const rank = sortedPlayers.findIndex(p => p.id === player.id) + 1;
   const latestScore = playerData.weeklyScores[playerData.weeklyScores.length - 1];
   const bestScore = Math.max(...playerData.weeklyScores);
@@ -84,15 +83,12 @@ const PlayerProfile = () => {
         {/* Ranking Type Tabs */}
         <div className="flex justify-center mb-8">
           <Tabs value={rankingType} onValueChange={setRankingType}>
-            <TabsList className="grid w-auto grid-cols-3">
+            <TabsList className="grid w-64 grid-cols-2">
               <TabsTrigger value="singles" className="font-display uppercase text-sm">
                 Singles
               </TabsTrigger>
               <TabsTrigger value="doubles" className="font-display uppercase text-sm">
                 Doubles
-              </TabsTrigger>
-              <TabsTrigger value="overall" className="font-display uppercase text-sm">
-                Overall
               </TabsTrigger>
             </TabsList>
           </Tabs>

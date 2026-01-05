@@ -3,15 +3,15 @@ import { Trophy, Users, TrendingUp, Target } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LeaderboardTable from "@/components/LeaderboardTable";
 import playersData from "@/data/players.json";
-import { getPlayerData, sortPlayersByRanking } from "@/lib/rankings";
 
 const Index = () => {
   const [rankingType, setRankingType] = useState("singles");
 
-  const sortedPlayers = sortPlayersByRanking(playersData, rankingType);
+  const getPlayerScore = (player) => player[rankingType].overallScore;
+  const sortedPlayers = [...playersData].sort((a, b) => getPlayerScore(b) - getPlayerScore(a));
   const topPlayer = sortedPlayers[0];
-  const totalMatches = playersData.reduce((acc, player) => acc + getPlayerData(player, rankingType).matchesPlayed, 0);
-  const averageScore = Math.round(playersData.reduce((acc, player) => acc + getPlayerData(player, rankingType).overallScore, 0) / playersData.length);
+  const totalMatches = playersData.reduce((acc, player) => acc + player[rankingType].matchesPlayed, 0);
+  const averageScore = Math.round(playersData.reduce((acc, player) => acc + getPlayerScore(player), 0) / playersData.length);
 
   return (
     <div className="min-h-screen bg-background">
@@ -61,15 +61,12 @@ const Index = () => {
           </h2>
           
           <Tabs value={rankingType} onValueChange={setRankingType} className="w-full sm:w-auto">
-            <TabsList className="grid w-full sm:w-auto grid-cols-3">
+            <TabsList className="grid w-full sm:w-auto grid-cols-2">
               <TabsTrigger value="singles" className="font-display uppercase text-sm">
                 Singles
               </TabsTrigger>
               <TabsTrigger value="doubles" className="font-display uppercase text-sm">
                 Doubles
-              </TabsTrigger>
-              <TabsTrigger value="overall" className="font-display uppercase text-sm">
-                Overall
               </TabsTrigger>
             </TabsList>
           </Tabs>

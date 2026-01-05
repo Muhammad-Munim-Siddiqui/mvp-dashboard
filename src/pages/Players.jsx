@@ -3,12 +3,11 @@ import { Users } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PlayerCard from "@/components/PlayerCard";
 import playersData from "@/data/players.json";
-import { sortPlayersByRanking } from "@/lib/rankings";
 
 const Players = () => {
   const [rankingType, setRankingType] = useState("singles");
   
-  const sortedPlayers = sortPlayersByRanking(playersData, rankingType);
+  const sortedPlayers = [...playersData].sort((a, b) => b[rankingType].overallScore - a[rankingType].overallScore);
 
   return (
     <div className="min-h-screen bg-background">
@@ -37,15 +36,12 @@ const Players = () => {
           </h2>
           
           <Tabs value={rankingType} onValueChange={setRankingType} className="w-full sm:w-auto">
-            <TabsList className="grid w-full sm:w-auto grid-cols-3">
+            <TabsList className="grid w-full sm:w-auto grid-cols-2">
               <TabsTrigger value="singles" className="font-display uppercase text-sm">
                 Singles
               </TabsTrigger>
               <TabsTrigger value="doubles" className="font-display uppercase text-sm">
                 Doubles
-              </TabsTrigger>
-              <TabsTrigger value="overall" className="font-display uppercase text-sm">
-                Overall
               </TabsTrigger>
             </TabsList>
           </Tabs>

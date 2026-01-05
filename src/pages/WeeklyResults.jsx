@@ -3,14 +3,13 @@ import { Calendar, TrendingUp, TrendingDown, Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import playersData from "@/data/players.json";
-import { getPlayerData } from "@/lib/rankings";
 
 const WeeklyResults = () => {
   const [rankingType, setRankingType] = useState("singles");
 
   // Get latest week scores (last element in weeklyScores array)
   const weeklyData = playersData.map(player => {
-    const playerData = getPlayerData(player, rankingType);
+    const playerData = player[rankingType];
     return {
       ...player,
       latestScore: playerData.weeklyScores[playerData.weeklyScores.length - 1],
@@ -47,15 +46,12 @@ const WeeklyResults = () => {
         {/* Ranking Type Tabs */}
         <div className="flex justify-center mb-8">
           <Tabs value={rankingType} onValueChange={setRankingType}>
-            <TabsList className="grid w-auto grid-cols-3">
+            <TabsList className="grid w-64 grid-cols-2">
               <TabsTrigger value="singles" className="font-display uppercase text-sm">
                 Singles
               </TabsTrigger>
               <TabsTrigger value="doubles" className="font-display uppercase text-sm">
                 Doubles
-              </TabsTrigger>
-              <TabsTrigger value="overall" className="font-display uppercase text-sm">
-                Overall
               </TabsTrigger>
             </TabsList>
           </Tabs>
