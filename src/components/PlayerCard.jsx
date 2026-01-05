@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { User, TrendingUp, Target } from "lucide-react";
 import ScoreBar from "./ScoreBar";
+import { getPlayerData } from "@/lib/rankings";
 
 const PlayerCard = ({ player, rank, rankingType = "singles" }) => {
-  const playerData = player[rankingType];
+  const playerData = getPlayerData(player, rankingType);
   const latestScore = playerData.weeklyScores[playerData.weeklyScores.length - 1];
   const previousScore = playerData.weeklyScores[playerData.weeklyScores.length - 2];
   const trend = latestScore - previousScore;
