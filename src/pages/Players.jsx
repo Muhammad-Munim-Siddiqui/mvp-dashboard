@@ -4,10 +4,13 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PlayerCard from "@/components/PlayerCard";
 import playersData from "@/data/players.json";
 
+const getOverallScore = (player) => Math.round((player.singles.overallScore + player.doubles.overallScore) / 2);
+
 const Players = () => {
   const [rankingType, setRankingType] = useState("singles");
   
-  const sortedPlayers = [...playersData].sort((a, b) => b[rankingType].overallScore - a[rankingType].overallScore);
+  const getPlayerScore = (player) => rankingType === "overall" ? getOverallScore(player) : player[rankingType].overallScore;
+  const sortedPlayers = [...playersData].sort((a, b) => getPlayerScore(b) - getPlayerScore(a));
 
   return (
     <div className="min-h-screen bg-background">
@@ -36,7 +39,10 @@ const Players = () => {
           </h2>
           
           <Tabs value={rankingType} onValueChange={setRankingType} className="w-full sm:w-auto">
-            <TabsList className="grid w-full sm:w-auto grid-cols-2">
+            <TabsList className="grid w-full sm:w-auto grid-cols-3">
+              <TabsTrigger value="overall" className="font-display uppercase text-sm">
+                Overall
+              </TabsTrigger>
               <TabsTrigger value="singles" className="font-display uppercase text-sm">
                 Singles
               </TabsTrigger>

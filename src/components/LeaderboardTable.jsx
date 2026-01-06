@@ -1,9 +1,19 @@
 import { Link } from "react-router-dom";
 import { ChevronRight, TrendingUp, TrendingDown, Minus } from "lucide-react";
 
+const getOverallScore = (player) => Math.round((player.singles.overallScore + player.doubles.overallScore) / 2);
+const getOverallMatches = (player) => player.singles.matchesPlayed + player.doubles.matchesPlayed;
+const getOverallTrend = (player) => {
+  const singlesLatest = player.singles.weeklyScores[player.singles.weeklyScores.length - 1];
+  const singlesPrev = player.singles.weeklyScores[player.singles.weeklyScores.length - 2];
+  const doublesLatest = player.doubles.weeklyScores[player.doubles.weeklyScores.length - 1];
+  const doublesPrev = player.doubles.weeklyScores[player.doubles.weeklyScores.length - 2];
+  return Math.round(((singlesLatest - singlesPrev) + (doublesLatest - doublesPrev)) / 2);
+};
+
 const LeaderboardTable = ({ players, rankingType = "singles" }) => {
-  const getPlayerData = (player) => player[rankingType];
-  const sortedPlayers = [...players].sort((a, b) => getPlayerData(b).overallScore - getPlayerData(a).overallScore);
+  const getPlayerScore = (player) => rankingType === "overall" ? getOverallScore(player) : player[rankingType].overallScore;
+  const sortedPlayers = [...players].sort((a, b) => getPlayerScore(b) - getPlayerScore(a));
 
   const getRankStyle = (rank) => {
     if (rank === 1) return "bg-amber-400 text-amber-900 font-bold";
@@ -12,11 +22,15 @@ const LeaderboardTable = ({ players, rankingType = "singles" }) => {
     return "bg-secondary text-secondary-foreground";
   };
 
-  const getTrend = (weeklyScores) => {
+  const getTrend = (player) => {
+    if (rankingType === "overall") return getOverallTrend(player);
+    const weeklyScores = player[rankingType].weeklyScores;
     const latest = weeklyScores[weeklyScores.length - 1];
     const previous = weeklyScores[weeklyScores.length - 2];
     return latest - previous;
   };
+  
+  const getMatches = (player) => rankingType === "overall" ? getOverallMatches(player) : player[rankingType].matchesPlayed;
 
   return (
     <div className="bg-card rounded-xl shadow-card border border-border/50 overflow-hidden">
@@ -35,8 +49,9 @@ const LeaderboardTable = ({ players, rankingType = "singles" }) => {
           <tbody>
             {sortedPlayers.map((player, index) => {
               const rank = index + 1;
-              const playerData = getPlayerData(player);
-              const trend = getTrend(playerData.weeklyScores);
+              const trend = getTrend(player);
+              const score = getPlayerScore(player);
+              const matches = getMatches(player);
 
               return (
                 <tr
@@ -57,7 +72,7 @@ const LeaderboardTable = ({ players, rankingType = "singles" }) => {
                     </Link>
                   </td>
                   <td className="px-4 py-4 text-center text-muted-foreground hidden sm:table-cell">
-                    {playerData.matchesPlayed}
+                    {matches}
                   </td>
                   <td className="px-4 py-4 text-center hidden md:table-cell">
                     <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
@@ -73,7 +88,7 @@ const LeaderboardTable = ({ players, rankingType = "singles" }) => {
                   </td>
                   <td className="px-4 py-4 text-center">
                     <span className="font-display text-xl font-bold text-primary">
-                      {playerData.overallScore}
+                      {score}
                     </span>
                   </td>
                   <td className="px-4 py-4 text-right">

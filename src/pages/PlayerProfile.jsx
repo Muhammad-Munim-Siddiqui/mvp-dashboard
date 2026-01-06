@@ -5,6 +5,14 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import WeeklyScoreChart from "@/components/WeeklyScoreChart";
 import playersData from "@/data/players.json";
 
+const getOverallScore = (player) => Math.round((player.singles.overallScore + player.doubles.overallScore) / 2);
+const getOverallMatches = (player) => player.singles.matchesPlayed + player.doubles.matchesPlayed;
+const getOverallWeeklyScores = (player) => {
+  return player.singles.weeklyScores.map((score, i) => 
+    Math.round((score + player.doubles.weeklyScores[i]) / 2)
+  );
+};
+
 const PlayerProfile = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
@@ -26,11 +34,16 @@ const PlayerProfile = () => {
     );
   }
 
-  const playerData = player[rankingType];
-  const sortedPlayers = [...playersData].sort((a, b) => b[rankingType].overallScore - a[rankingType].overallScore);
+  const isOverall = rankingType === "overall";
+  const overallScore = isOverall ? getOverallScore(player) : player[rankingType].overallScore;
+  const matchesPlayed = isOverall ? getOverallMatches(player) : player[rankingType].matchesPlayed;
+  const weeklyScores = isOverall ? getOverallWeeklyScores(player) : player[rankingType].weeklyScores;
+  
+  const getPlayerScore = (p) => isOverall ? getOverallScore(p) : p[rankingType].overallScore;
+  const sortedPlayers = [...playersData].sort((a, b) => getPlayerScore(b) - getPlayerScore(a));
   const rank = sortedPlayers.findIndex(p => p.id === player.id) + 1;
-  const latestScore = playerData.weeklyScores[playerData.weeklyScores.length - 1];
-  const bestScore = Math.max(...playerData.weeklyScores);
+  const latestScore = weeklyScores[weeklyScores.length - 1];
+  const bestScore = Math.max(...weeklyScores);
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,7 +82,7 @@ const PlayerProfile = () => {
 
             <div className="bg-primary-foreground/10 backdrop-blur-sm rounded-xl p-6 text-center">
               <div className="font-display text-4xl md:text-5xl font-bold text-primary-foreground">
-                {playerData.overallScore}
+                {overallScore}
               </div>
               <div className="text-xs text-primary-foreground/70 uppercase tracking-widest mt-1">
                 {rankingType} Score
@@ -83,7 +96,10 @@ const PlayerProfile = () => {
         {/* Ranking Type Tabs */}
         <div className="flex justify-center mb-8">
           <Tabs value={rankingType} onValueChange={setRankingType}>
-            <TabsList className="grid w-64 grid-cols-2">
+            <TabsList className="grid w-80 grid-cols-3">
+              <TabsTrigger value="overall" className="font-display uppercase text-sm">
+                Overall
+              </TabsTrigger>
               <TabsTrigger value="singles" className="font-display uppercase text-sm">
                 Singles
               </TabsTrigger>
@@ -110,7 +126,7 @@ const PlayerProfile = () => {
               <Target className="w-5 h-5 text-accent" />
               <span className="text-sm text-muted-foreground">Matches</span>
             </div>
-            <div className="font-display text-3xl font-bold text-foreground">{playerData.matchesPlayed}</div>
+            <div className="font-display text-3xl font-bold text-foreground">{matchesPlayed}</div>
             <div className="text-xs text-muted-foreground">total played</div>
           </div>
 
@@ -135,7 +151,7 @@ const PlayerProfile = () => {
 
         {/* Weekly Performance Chart */}
         <div className="animate-slide-up" style={{ animationDelay: "500ms" }}>
-          <WeeklyScoreChart scores={playerData.weeklyScores} playerName={player.name} rankingType={rankingType} />
+          <WeeklyScoreChart scores={weeklyScores} playerName={player.name} rankingType={rankingType} />
         </div>
 
         {/* Player Bio Card */}
