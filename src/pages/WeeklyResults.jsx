@@ -9,6 +9,20 @@ const WeeklyResults = () => {
 
   // Get latest week scores (last element in weeklyScores array)
   const weeklyData = playersData.map(player => {
+    if (rankingType === "overall") {
+      const singlesLatest = player.singles.weeklyScores[player.singles.weeklyScores.length - 1];
+      const singlesPrev = player.singles.weeklyScores[player.singles.weeklyScores.length - 2];
+      const doublesLatest = player.doubles.weeklyScores[player.doubles.weeklyScores.length - 1];
+      const doublesPrev = player.doubles.weeklyScores[player.doubles.weeklyScores.length - 2];
+      const latestScore = Math.round((singlesLatest + doublesLatest) / 2);
+      const previousScore = Math.round((singlesPrev + doublesPrev) / 2);
+      return {
+        ...player,
+        latestScore,
+        previousScore,
+        trend: latestScore - previousScore
+      };
+    }
     const playerData = player[rankingType];
     return {
       ...player,
@@ -46,7 +60,10 @@ const WeeklyResults = () => {
         {/* Ranking Type Tabs */}
         <div className="flex justify-center mb-8">
           <Tabs value={rankingType} onValueChange={setRankingType}>
-            <TabsList className="grid w-64 grid-cols-2">
+            <TabsList className="grid w-80 grid-cols-3">
+              <TabsTrigger value="overall" className="font-display uppercase text-sm">
+                Overall
+              </TabsTrigger>
               <TabsTrigger value="singles" className="font-display uppercase text-sm">
                 Singles
               </TabsTrigger>

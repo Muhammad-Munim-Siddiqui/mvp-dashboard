@@ -4,13 +4,15 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LeaderboardTable from "@/components/LeaderboardTable";
 import playersData from "@/data/players.json";
 
+const getOverallScore = (player) => Math.round((player.singles.overallScore + player.doubles.overallScore) / 2);
+
 const Index = () => {
   const [rankingType, setRankingType] = useState("singles");
 
-  const getPlayerScore = (player) => player[rankingType].overallScore;
+  const getPlayerScore = (player) => rankingType === "overall" ? getOverallScore(player) : player[rankingType].overallScore;
   const sortedPlayers = [...playersData].sort((a, b) => getPlayerScore(b) - getPlayerScore(a));
   const topPlayer = sortedPlayers[0];
-  const totalMatches = playersData.reduce((acc, player) => acc + player[rankingType].matchesPlayed, 0);
+  const totalMatches = playersData.reduce((acc, player) => acc + player.singles.matchesPlayed + player.doubles.matchesPlayed, 0);
   const averageScore = Math.round(playersData.reduce((acc, player) => acc + getPlayerScore(player), 0) / playersData.length);
 
   return (
@@ -61,7 +63,10 @@ const Index = () => {
           </h2>
           
           <Tabs value={rankingType} onValueChange={setRankingType} className="w-full sm:w-auto">
-            <TabsList className="grid w-full sm:w-auto grid-cols-2">
+            <TabsList className="grid w-full sm:w-auto grid-cols-3">
+              <TabsTrigger value="overall" className="font-display uppercase text-sm">
+                Overall
+              </TabsTrigger>
               <TabsTrigger value="singles" className="font-display uppercase text-sm">
                 Singles
               </TabsTrigger>
